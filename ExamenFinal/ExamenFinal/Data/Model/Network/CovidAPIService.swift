@@ -20,7 +20,7 @@ class CovidAPIService {
         }
         
         //header token
-        let headers: HTTPHeaders = [
+        let _: HTTPHeaders = [
                     "X-Api-Key": apiKey
                 ]
         
@@ -37,6 +37,7 @@ class CovidAPIService {
             }
         case let .failure(error):
             debugPrint("Error en la solicitud: \(error.localizedDescription)")
+            
             return nil
         }
     }

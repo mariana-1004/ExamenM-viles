@@ -25,45 +25,34 @@ struct CovidView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             
-            // Selector de país
+            // Campo para capturar el país
             TextField("Introduce un país", text: $country)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            // Selector de fecha
-            DatePicker("Selecciona una fecha", selection: $selectedDate, displayedComponents: .date)
-                .datePickerStyle(GraphicalDatePickerStyle())
-                .padding()
-            
+            // Botón para consultar datos
             Button("Consultar Datos de COVID") {
                 Task {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd"
-                    let formattedDate = dateFormatter.string(from: selectedDate)
-                    
-                    await covidViewModel.getCovidStatistics(for: country, date: formattedDate)
+                    await covidViewModel.getCovidStatistics(for: country)
                 }
-                
-            }.padding()
+            }
+            .padding()
             
-            // Mensajes de error
-            if let error = covidViewModel.errorMessage {
-                Text(error)
+            // Lista de datos o mensaje de error
+            if let errorMessage = covidViewModel.errorMessage {
+                Text(errorMessage)
                     .foregroundColor(.red)
                     .padding()
-            }
-            
-            // Lista de datos
-            List(covidViewModel.covidData, id: \.region) { region in
-                VStack(alignment: .leading) {
-                    Text("País: \(region.country)")
-                    Text("Región: \(region.region)")
+            } else {
+                List(covidViewModel.covidData, id: \.region) { region in
+                    VStack(alignment: .leading) {
+                        Text("País: \(region.country)")
+                        Text("Región: \(region.region)")
+                    }
                 }
             }
-            
-            
-            .padding()
         }
+        .padding()
     }
 }
 
