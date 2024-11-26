@@ -59,6 +59,7 @@ struct CovidView: View {
                             ForEach(region.cases.keys.sorted(), id: \.self) { date in
                                 if let caseData = region.cases[date] {
                                     VStack(alignment: .leading) {
+                                        
                                         Text("Fecha: \(date)")
                                             .font(.footnote)
                                             .foregroundColor(.blue)
@@ -67,6 +68,7 @@ struct CovidView: View {
                                         Text("Casos Nuevos: \(caseData.new)")
                                             .font(.footnote)
                                             .foregroundColor(.red)
+                                            Spacer()
                                     }
                                 }
                             }
