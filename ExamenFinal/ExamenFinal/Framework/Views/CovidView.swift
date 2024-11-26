@@ -25,12 +25,12 @@ struct CovidView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             
-            // Campo para capturar el país
+            // Country field
             TextField("Introduce un país", text: $country)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            // Botón para consultar datos
+            // Consult Buttom
             Button("Consultar Datos de COVID") {
                 Task {
                     await covidViewModel.getCovidStatistics(for: country)
@@ -38,17 +38,45 @@ struct CovidView: View {
             }
             .padding()
             
-            // Lista de datos o mensaje de error
-            if let errorMessage = covidViewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
+            // error msg
+            if covidViewModel.covidData.isEmpty {
+                if let errorMessage = covidViewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
             } else {
                 List(covidViewModel.covidData, id: \.region) { region in
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 5) {
                         Text("País: \(region.country)")
+                            .font(.headline)
                         Text("Región: \(region.region)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        
+                        if !region.cases.isEmpty {
+                            ForEach(region.cases.keys.sorted(), id: \.self) { date in
+                                if let caseData = region.cases[date] {
+                                    VStack(alignment: .leading) {
+                                        Text("Fecha: \(date)")
+                                            .font(.footnote)
+                                            .foregroundColor(.blue)
+                                        Text("Casos Totales: \(caseData.total)")
+                                            .font(.footnote)
+                                        Text("Casos Nuevos: \(caseData.new)")
+                                            .font(.footnote)
+                                            .foregroundColor(.red)
+                                    }
+                                }
+                            }
+                        } else {
+                            Text("No hay datos de casos para esta región.")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
                     }
+                    .padding(.vertical, 5)
                 }
             }
         }

@@ -8,8 +8,8 @@
 import Foundation
 
 struct CovidCases: Codable {
-    var total: String
-    var new: String
+    var total: Int
+    var new: Int
 }
 
 struct CovidLocation: Codable{
